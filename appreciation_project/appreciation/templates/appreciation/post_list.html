@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Posts for {{ event.name }}</title>
+    <style>
+        /* Your CSS here */
+    </style>
+</head>
+<body>
+    <h1>Posts for {{ event.name }}</h1>
+    <a href="{% url 'create_post' %}">Create a new post</a>
+    <ul>
+        {% for post in posts %}
+            <li>
+                {{ post.content }} - 
+                {% if post.is_anonymous %}
+                    Anonymous
+                {% else %}
+                    {{ post.author.username }}
+                {% endif %}
+
+                <!-- Emoji Reaction Button -->
+                <div class="emoji-button">
+                    <button class="reaction-btn">😊</button>
+                    <div class="emoji-dropdown">
+                        <button data-emoji="👍">👍</button>
+                        <button data-emoji="❤️">❤️</button>
+                        <button data-emoji="😂">😂</button>
+                        <button data-emoji="😮">😮</button>
+                        <button data-emoji="😢">😢</button>
+                        <button data-emoji="😡">😡</button>
+                    </div>
+                </div>
+
+                <!-- Display Reactions -->
+                <ul class="reactions-list" id="reactions-list-{{ post.id }}" data-post-id="{{ post.id }}">
+                    {% for reaction in post.reactions.all %}
+                        <li>{{ reaction.user.username }} reacted with {{ reaction.emoji }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        document.querySelectorAll('.emoji-dropdown button').forEach(button => {
+            button.addEventListener('click', function() {
+                const emoji = this.getAttribute('data-emoji');
+                const postId = this.closest('li').querySelector('.reactions-list').getAttribute('data-post-id');
+                fetch(`/appreciation/posts/${postId}/reaction/`, {  // Adjusted URL with postId
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: new URLSearchParams({
+                        'emoji': emoji
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const reactionsList = document.getElementById(`reactions-list-${postId}`);
+                    reactionsList.innerHTML += `<li>You reacted with ${data.emoji}</li>`;
+                });
+            });
+        });
+    </script>
+</body>
+</html>

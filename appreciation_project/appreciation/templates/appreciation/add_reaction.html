@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Reaction</title>
+</head>
+<body>
+    <h1>Add Reaction to Post</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">React</button>
+    </form>
+</body>
+</html>
