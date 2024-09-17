@@ -1,14 +1,22 @@
+<!-- team_event_form.html -->
+{% load static %}
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Create Event</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Team Event</title>
+    <link rel="stylesheet" href="{% static 'formstyle.css' %}">
 </head>
 <body>
-    <h1>Create Event</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Create</button>
-    </form>
+    <div class="form-container">
+        <h1>My Team Event</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Submit</button>
+        </form>
+    </div>
 </body>
 </html>

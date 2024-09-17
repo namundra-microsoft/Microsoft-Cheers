@@ -12,6 +12,8 @@
     </ul>
 </body>
 </html> -->
+{% load static %}
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,87 +21,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Microsoft Cheers - Event History</title>
-    <style>
-        /* Basic styling */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        h1 {
-            color: #0078D4;
-            margin-top: 30px;
-            font-size: 3em;
-        }
-
-        h2 {
-            color: #333;
-            margin: 20px 0;
-            font-size: 2em;
-        }
-
-        /* Container for the tiles */
-        .event-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 20px;
-            max-width: 1200px;
-            width: 100%;
-        }
-
-        /* Each event tile */
-        .event-tile {
-            background-color: #fff;
-            border: 2px solid #0078D4;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
-        }
-
-        .event-tile:hover {
-            transform: scale(1.05);
-        }
-
-        /* Event button */
-        .event-tile button {
-            background-color: #0078D4;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 1.1em;
-            cursor: pointer;
-        }
-
-        .event-tile button:hover {
-            background-color: #005A9E;
-        }
-
-        /* Create Event Button */
-        .create-event-button {
-            margin: 20px 0;
-            padding: 15px 30px;
-            background-color: #28a745;
-            color: white;
-            font-size: 1.2em;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .create-event-button:hover {
-            background-color: #218838;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
 
@@ -112,13 +34,13 @@
     <!-- Event Tiles Container -->
     <div class="event-container">
         {% for event in events %}
-            <div class="event-tile">
-                <h3>{{ event.name }}</h3>
-                <p>Date: {{ event.start_date }}</p>
-                <a href="{% url 'post_list' event.id %}">
-                    <button>View Posts</button>
-                </a>
-            </div>
+        <div class="event-tile">
+            <h3>{{ event.name }}</h3>
+            <p>Date: {{ event.start_date }}</p>
+            <a href="{% url 'post_list' event.id %}">
+                <button>View Posts</button>
+            </a>
+        </div>
         {% endfor %}
     </div>
 
