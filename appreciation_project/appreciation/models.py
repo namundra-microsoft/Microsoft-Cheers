@@ -26,8 +26,5 @@ class Reaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     reaction_type = models.CharField(max_length=50)  # e.g., "Like", "Love"
 
-    class Meta:
-        unique_together = ('post', 'user')
-
     def __str__(self):
         return f'Reaction by {self.user.username} on Post {self.post.id}'

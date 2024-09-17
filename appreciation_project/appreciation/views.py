@@ -21,11 +21,18 @@ def create_post(request):
 @login_required
 def add_reaction(request, post_id):
     if request.method == 'POST':
+        print(post_id)
         emoji = request.POST.get('emoji')
         post = get_object_or_404(Post, id=post_id)
-        reaction, created = Reaction.objects.get_or_create(post=post, user=request.user, emoji=emoji)
-        reactions_count = Reaction.objects.filter(post=post, emoji=emoji).count()
-        return JsonResponse({'reactions_count': reactions_count, 'emoji': emoji})
+        reaction, created = Reaction.objects.get_or_create(post=post, user=request.user, reaction_type=emoji)
+        res_reaction = {}
+        reaction_types = ["Like", "Love", "Laugh", "Wow", "Sad", "Angry"]
+        for reaction_type in reaction_types:
+            reaction_count = Reaction.objects.filter(post=post, reaction_type=reaction_type).count()
+            if reaction_count > 0:
+                res_reaction[reaction_type] = reaction_count
+        print(res_reaction)
+        return JsonResponse(res_reaction)
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
 def event_list(request):
@@ -35,7 +42,18 @@ def event_list(request):
 def post_list(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     posts = event.posts.all()
-    return render(request, 'appreciation/post_list.html', {'event': event, 'posts': posts})
+    res_posts = []
+    reaction_types = ["Like", "Love", "Laugh", "Wow", "Sad", "Angry"]
+    for post in posts:
+        res_reaction = {}
+        for reaction_type in reaction_types:
+            reaction_count = Reaction.objects.filter(post=post, reaction_type=reaction_type).count()
+            if reaction_count > 0:
+                res_reaction[reaction_type] = reaction_count
+
+        res_posts.append({'post': post, 'reaction': res_reaction})
+        
+    return render(request, 'appreciation/post_list.html', {'event': event, 'posts': res_posts})
 
 def create_event(request):
     if request.method == 'POST':
