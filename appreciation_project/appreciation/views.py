@@ -4,6 +4,7 @@ from .models import Event, Post, Reaction
 from .forms import PostForm, EventForm
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
+from django.contrib.auth.models import User
 
 @login_required
 def create_post(request):
@@ -64,3 +65,7 @@ def create_event(request):
     else:
         form = EventForm()
     return render(request, 'appreciation/create_event.html', {'form': form})
+
+def team_members(request):
+    users = User.objects.all()  # Get all the users from the database
+    return render(request, 'appreciation/team_members.html', {'users': users})

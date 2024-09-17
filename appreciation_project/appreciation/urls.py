@@ -7,4 +7,5 @@ urlpatterns = [
     path('create_post/', views.create_post, name='create_post'),
     path('add_reaction/<int:post_id>/', views.add_reaction, name='add_reaction'),
     path('create_event/', views.create_event, name='create_event'),
+    path('team/', views.team_members, name='team_members'),  # New path for team members
 ]
