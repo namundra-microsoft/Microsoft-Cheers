@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post, Reaction
+from .models import Post, Reaction, Event
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -17,3 +17,8 @@ class ReactionForm(forms.ModelForm):
         # widgets = {
         #     'emoji': forms.HiddenInput()  # Hide the input field since we will use buttons
         # }
+
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = Event
+        fields = ['name', 'description', 'start_date', 'end_date']

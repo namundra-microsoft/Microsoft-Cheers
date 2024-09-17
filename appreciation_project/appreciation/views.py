@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Event, Post, Reaction
-from .forms import PostForm
+from .forms import PostForm, EventForm
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 
@@ -36,3 +36,13 @@ def post_list(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     posts = event.posts.all()
     return render(request, 'appreciation/post_list.html', {'event': event, 'posts': posts})
+
+def create_event(request):
+    if request.method == 'POST':
+        form = EventForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('event_list')  # Redirect to the event list after creation
+    else:
+        form = EventForm()
+    return render(request, 'appreciation/create_event.html', {'form': form})
