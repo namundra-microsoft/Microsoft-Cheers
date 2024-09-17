@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+﻿from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Event, Post, Reaction
 from .forms import PostForm, EventForm
@@ -42,6 +42,14 @@ def event_list(request):
 def post_list(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     posts = event.posts.all()
+    reaction_emojis = {
+        "Like": "👍",
+        "Love": "❤️",
+        "Laugh": "😂",
+        "Wow": "😮",
+        "Sad": "😢",
+        "Angry": "😡"
+    }
     res_posts = []
     reaction_types = ["Like", "Love", "Laugh", "Wow", "Sad", "Angry"]
     for post in posts:
@@ -49,8 +57,8 @@ def post_list(request, event_id):
         for reaction_type in reaction_types:
             reaction_count = Reaction.objects.filter(post=post, reaction_type=reaction_type).count()
             if reaction_count > 0:
-                res_reaction[reaction_type] = reaction_count
-
+                res_reaction[reaction_emojis[reaction_type]] = reaction_count
+        print(res_reaction)
         res_posts.append({'post': post, 'reaction': res_reaction})
         
     return render(request, 'appreciation/post_list.html', {'event': event, 'posts': res_posts})
