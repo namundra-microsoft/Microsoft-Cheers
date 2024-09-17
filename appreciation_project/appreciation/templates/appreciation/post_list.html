@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
     <title>Posts for {{ event.name }}</title>
@@ -19,7 +19,7 @@
                     {{ post.author.username }}
                 {% endif %}
 
-                <!-- Emoji Reaction Button -->
+               
                 <div class="emoji-button">
                     <button class="reaction-btn">😊</button>
                     <div class="emoji-dropdown">
@@ -32,7 +32,7 @@
                     </div>
                 </div>
 
-                <!-- Display Reactions -->
+                
                 <ul class="reactions-list" id="reactions-list-{{ post.id }}" data-post-id="{{ post.id }}">
                     {% for reaction in post.reactions.all %}
                         <li>{{ reaction.user.username }} reacted with {{ reaction.emoji }}</li>
@@ -61,6 +61,223 @@
                 .then(data => {
                     const reactionsList = document.getElementById(`reactions-list-${postId}`);
                     reactionsList.innerHTML += `<li>You reacted with ${data.emoji}</li>`;
+                });
+            });
+        });
+    </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Posts for {{ event.name }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .create-post {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .create-post a {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .post-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .post-tile {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            position: relative;
+        }
+
+        .post-tile h3 {
+            font-size: 1.2em;
+            margin: 0;
+            color: #333;
+        }
+
+        .post-tile p {
+            color: #555;
+        }
+
+        .reactions-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-top: 10px;
+        }
+
+        .selected-reaction {
+            font-size: 1.5em;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .selected-reaction:hover .reaction-users {
+            display: block;
+        }
+
+        .reaction-users {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 5px;
+            top: 30px;
+            left: 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .reaction-users p {
+            margin: 0;
+            font-size: 0.9em;
+            color: #333;
+        }
+
+        .emoji-button {
+            display: inline-block;
+            margin-left: 20px;
+        }
+
+        .reaction-btn {
+            background-color: transparent;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+
+        .emoji-dropdown {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 5px;
+        }
+
+        .emoji-dropdown button {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .emoji-button:hover .emoji-dropdown {
+            display: block;
+        }
+
+        .reaction-container {
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Posts for {{ event.name }}</h1>
+        
+        <div class="create-post">
+            <a href="{% url 'create_post' %}">Create a new post</a>
+        </div>
+
+        <div class="post-grid">
+            {% for post in posts %}
+            <div class="post-tile">
+                <p>
+                    {% if post.is_anonymous %}
+                        Anonymous
+                    {% else %}
+                        {{ post.author.username }}
+                    {% endif %}
+                </p>
+                <h4>{{ post.content }}</h4>
+
+                <!-- Reaction Section -->
+                <div class="reactions-container">
+                    <!-- Selected Reaction Display -->
+                    <div class="selected-reaction">
+                        {% if post.reactions.count > 0 %}
+                            {{ post.reactions.first.emoji }}
+                        {% else %}
+                            😊
+                        {% endif %}
+                        <!-- Hover tooltip for users who reacted -->
+                        <div class="reaction-users">
+                            <ul>
+                                {% for reaction in post.reactions.all %}
+                                    <li>{{ reaction.user.username }} reacted with {{ reaction.emoji }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Emoji Reaction Button -->
+                    <div class="emoji-button">
+                        <button class="reaction-btn">React</button>
+                        <div class="emoji-dropdown">
+                            <button data-emoji="👍">👍</button>
+                            <button data-emoji="❤️">❤️</button>
+                            <button data-emoji="😂">😂</button>
+                            <button data-emoji="😮">😮</button>
+                            <button data-emoji="😢">😢</button>
+                            <button data-emoji="😡">😡</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.emoji-dropdown button').forEach(button => {
+            button.addEventListener('click', function() {
+                const emoji = this.getAttribute('data-emoji');
+                const postId = this.closest('.post-tile').querySelector('.selected-reaction').getAttribute('data-post-id');
+                fetch(`/appreciation/posts/${postId}/reaction/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: new URLSearchParams({
+                        'emoji': emoji
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const selectedReaction = this.closest('.post-tile').querySelector('.selected-reaction');
+                    selectedReaction.innerHTML = `${data.emoji}`;
                 });
             });
         });
