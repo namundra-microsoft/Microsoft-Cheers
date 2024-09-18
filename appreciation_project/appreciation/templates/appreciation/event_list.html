@@ -151,11 +151,11 @@
 
                 {% if event.end_date < today %}
                     <p class="inactive-event">No longer active</p>
-                {% else %}
-                    <a href="{% url 'post_list' event.id %}">
-                        <button>View Posts</button>
-                    </a>
                 {% endif %}
+                
+                <a href="{% url 'post_list' event.id %}">
+                    <button>View Posts</button>
+                </a>
             </div>
         {% endfor %}
     </div>
