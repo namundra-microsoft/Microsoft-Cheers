@@ -96,9 +96,10 @@ def event_list(request):
         
 #     return render(request, 'appreciation/post_list.html', {'event': event, 'posts': res_posts})
 
+@login_required
 def post_list(request, event_id):
     event = get_object_or_404(Event, id=event_id)
-    posts = event.posts.all()
+    posts = event.posts.all()  # Fetch all posts for the event
     reaction_emojis = {
         "Like": "👍",
         "Love": "❤️",
@@ -115,21 +116,20 @@ def post_list(request, event_id):
             reaction_count = Reaction.objects.filter(post=post, reaction_type=reaction_type).count()
             if reaction_count > 0:
                 res_reaction[reaction_emojis[reaction_type]] = reaction_count
-        print(res_reaction)
         res_posts.append({'post': post, 'reaction': res_reaction})
 
-    # Determine if the event is active
+    # Check if event is active
     is_active = event.end_date >= timezone.now().date()
 
-    return render(request, 'appreciation/post_list.html', {'event': event, 'posts': res_posts, 'is_active': is_active})
+    return render(request, 'appreciation/post_list.html', {'event': event, 'posts': res_posts, 'is_active': is_active, 'my_posts_view': False})
 
+@login_required
 def view_my_posts(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     user = request.user
-    # Fetch posts where the 'to' field matches the logged-in user
+    # Fetch posts where 'to' field matches the logged-in user
     my_posts = Post.objects.filter(event=event, to=user)
     
-    # Prepare posts with reactions for display
     reaction_emojis = {
         "Like": "👍",
         "Love": "❤️",
@@ -150,8 +150,6 @@ def view_my_posts(request, event_id):
         res_posts.append({'post': post, 'reaction': res_reaction})
 
     return render(request, 'appreciation/post_list.html', {'event': event, 'posts': res_posts, 'my_posts_view': True})
-
-
 def create_event(request):
     if request.method == 'POST':
         form = EventForm(request.POST)
@@ -165,3 +163,18 @@ def create_event(request):
 def team_members(request):
     users = User.objects.all()  # Get all the users from the database
     return render(request, 'appreciation/team_members.html', {'users': users})
+
+
+@login_required
+def event_participants(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+
+    # Get users who have participated (posted or reacted)
+    post_authors = Post.objects.filter(event=event).values_list('author', flat=True)
+    reaction_users = Reaction.objects.filter(post__event=event).values_list('user', flat=True)
+
+    # Get unique user list
+    participant_ids = set(list(post_authors) + list(reaction_users))
+    participants = User.objects.filter(id__in=participant_ids)
+
+    return render(request, 'appreciation/event_participants.html', {'event': event, 'participants': participants})

@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Participants of {{ event.name }}</title>
+    <link rel="stylesheet" href="{% static 'poststyle.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Participants of {{ event.name }}</h1>
+
+        <ul>
+            {% for participant in participants %}
+                <li>{{ participant.username }}</li>
+            {% endfor %}
+        </ul>
+
+        <a href="{% url 'post_list' event.id %}">Back to Cheers</a>
+    </div>
+</body>
+</html>

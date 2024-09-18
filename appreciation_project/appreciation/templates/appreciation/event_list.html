@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Microsoft Cheers - Event History</title>
     <style>
         /* Basic styling */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e6f3ff; /* Light blue background */
             margin: 0;
             padding: 0;
         }
@@ -16,7 +17,7 @@
         /* Navigation bar styling */
         nav {
             background-color: #0078D4;
-            padding: 10px 20px;
+            padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -27,6 +28,7 @@
             text-decoration: none;
             padding: 10px 20px;
             font-size: 1.2em;
+            font-weight: bold;
         }
 
         nav a:hover {
@@ -40,6 +42,7 @@
             margin-top: 30px;
             font-size: 3em;
             text-align: center;
+            font-weight: bold;
         }
 
         h2 {
@@ -47,6 +50,15 @@
             margin: 20px 0;
             font-size: 2em;
             text-align: center;
+            font-weight: 300;
+        }
+
+        /* Tagline below the main heading */
+        .tagline {
+            text-align: center;
+            font-size: 1.5em;
+            color: #555;
+            margin-bottom: 30px;
         }
 
         /* Container for the tiles */
@@ -68,6 +80,7 @@
             text-align: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s;
+            position: relative;
         }
 
         .event-tile:hover {
@@ -83,10 +96,18 @@
             border-radius: 5px;
             font-size: 1.1em;
             cursor: pointer;
+            margin-top: 10px;
         }
 
         .event-tile button:hover {
             background-color: #005A9E;
+        }
+
+        /* Image at the top of each event tile */
+        .event-tile img {
+            max-width: 100px;
+            max-height: 100px;
+            margin-bottom: 15px;
         }
 
         /* Create Event Button */
@@ -110,12 +131,57 @@
 
         .button-container {
             text-align: center;
-            margin: 20px 0;
+            margin: 40px 0;
         }
 
         .inactive-event {
             color: #ff0000;
             font-weight: bold;
+        }
+
+        /* Resources Section */
+        .resources {
+            background-color: #0078D4;
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .resources h2 {
+            color: white;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .resources p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .resources video {
+            width: 80%;
+            max-width: 700px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Footer styling */
+        footer {
+            background-color: #0078D4;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 1em;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        /* Banner Image at the top of the page */
+        .banner-image {
+            width: 100%;
+            max-height: 600px;
+            object-fit: cover;
         }
     </style>
 </head>
@@ -136,8 +202,14 @@
         </div>
     </nav>
 
+    <!-- Banner Image -->
+    <img src="{% static 'images/cheer.png' %}" alt="Cheers Banner" class="banner-image">
+
     <!-- Main Heading -->
     <h1>Microsoft Cheers</h1>
+
+    <!-- Tagline -->
+    <p class="tagline">"Where every small cheer makes a big difference!"</p>
 
     <!-- Subheading for Event History -->
     <h2>Event History</h2>
@@ -146,6 +218,9 @@
     <div class="event-container">
         {% for event in events %}
             <div class="event-tile">
+                <!-- Event Image -->
+                <img src="{% static 'images/2.png' %}" alt="Event Icon" width="70" height="70">
+
                 <h3>{{ event.name }}</h3>
                 <p>Date: {{ event.start_date }}</p>
 
@@ -166,12 +241,22 @@
         <a href="{% url 'create_event' %}">
             <button class="create-event-button">Create New Event</button>
         </a>
-
-<!-- 
-        <a href="{% url 'team_members' %}">
-            <button class="create-event-button">View Team Members</button>
-        </a> -->
     </div>
+
+    <!-- Resources Section -->
+    <div class="resources">
+        <h2>Resources & Inspiration</h2>
+        <p>Watch the video below to learn more about how cheering helps foster a positive team environment!</p>
+        <video controls>
+            <source src="{% static 'videos/cheers_video.mp4' %}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Microsoft Cheers | Spread positivity, one cheer at a time!</p>
+    </footer>
 
 </body>
 </html>

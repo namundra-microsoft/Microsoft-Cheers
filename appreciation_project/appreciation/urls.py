@@ -10,4 +10,5 @@ urlpatterns = [
     path('team/', views.team_members, name='team_members'),  # New path for team members
     path('create_post/<int:event_id>/', views.create_post, name='create_post'),
     path('posts/<int:event_id>/my_posts/', views.view_my_posts, name='view_my_posts'),
+    path('event/<int:event_id>/participants/', views.event_participants, name='event_participants'),
 ]

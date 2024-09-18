@@ -1,75 +1,90 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cheers for {{ event.name }}</title>
     <link rel="stylesheet" href="{% static 'poststyle.css' %}">
+    <!-- Add a Google Font for styling -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <h1>Cheers for {{ event.name }}</h1>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <ul class="navbar-links">
+            <li><a href="{% url 'post_list' event.id %}">All Cheers</a></li>
+            <li><a href="{% url 'view_my_posts' event.id %}">View My Cheers</a></li>
+            <li><a href="{% url 'event_participants' event.id %}">View Participants</a></li>
+        </ul>
+    </nav>
 
-        <div class="tab-navigation">
-            <!-- Toggle between all posts and view my posts -->
-            <a href="{% url 'post_list' event.id %}">All Cheers</a> |
-            <a href="{% url 'view_my_posts' event.id %}">View My Cheers</a>
-        </div>
+    <!-- Header Section -->
+    <header class="header">
+        <h1>Spread the Cheer for {{ event.name }}</h1>
+        <p>Let’s celebrate every moment by showing gratitude!</p>
+        <img src="{% static 'images/gratitude.png' %}" alt="Gratitude Banner" class="header-image" style="width: 100%; max-height: 350px; object-fit: cover;">
+    </header>
 
-        {% if my_posts_view %}
-            <h2>Cheers dedicated to you</h2>
-        {% else %}
-            <h2>All Cheers</h2>
-        {% endif %}
+    <!-- Create Post Button -->
+    {% if is_active %}
+    <div class="create-post">
+        <a href="{% url 'create_post' event.id %}" class="btn-primary">Cheer Someone!</a>
+    </div>
+    {% endif %}
 
-        <!-- Create Post Button (only show when the event is active) -->
-        {% if is_active %}
-        <div class="create-post">
-            <a href="{% url 'create_post' event.id %}">Cheer someone! </a>
-        </div>
-        {% endif %}
+    <!-- Gratitude Section -->
+    <section class="gratitude-section">
+        <h2>Share the Love!</h2>
+        <!-- <div class="gratitude-gallery">
+            <img src="{% static 'images/gratitude_heart.png' %}" alt="Heart Icon">
+            <img src="{% static 'images/gratitude_smile.png' %}" alt="Smile Icon">
+            <img src="{% static 'images/gratitude_handshake.png' %}" alt="Handshake Icon">
+        </div> -->
+    </section>
 
-        <div class="post-grid">
-            {% for res in posts %}
-            {% with post=res.post reaction=res.reaction %}
-            <div class="post-tile" data-post-id="{{ post.id }}">
-                <p>
-                    {% if post.is_anonymous %}
-                    Anonymous
-                    {% else %}
-                    {{ post.author.username }}
-                    {% endif %}
-                </p>
-                <h4>{{ post.content }}</h4>
+    <!-- Post Grid -->
+    <div class="post-grid">
+        {% for res in posts %}
+        {% with post=res.post reaction=res.reaction %}
+        <div class="post-tile" data-post-id="{{ post.id }}">
+            <p class="post-author">
+                {% if post.is_anonymous %}
+                Anonymous
+                {% else %}
+                {{ post.author.username }}
+                {% endif %}
+            </p>
+            <h4 class="post-content">{{ post.content }}</h4>
 
-                <!-- Reaction Section -->
-                <div class="reactions-container">
-                    <div class="selected-reaction">
-                        <div class="reaction-values">
-                            {% for react_type, react_count in reaction.items %}
-                            {% if react_count > 0 %}
-                            {{ react_count }} {{ react_type }},
-                            {% endif %}
-                            {% endfor %}
-                        </div>
+            <!-- Reaction Section -->
+            <div class="reactions-container">
+                <div class="selected-reaction">
+                    <div class="reaction-values">
+                        {% for react_type, react_count in reaction.items %}
+                        {% if react_count > 0 %}
+                        {{ react_count }} {{ react_type }}&nbsp;
+                        {% endif %}
+                        {% endfor %}
                     </div>
+                </div>
 
-                    <!-- Emoji Reaction Button -->
-                    <div class="emoji-button">
-                        <button class="reaction-btn">React</button>
-                        <div class="emoji-dropdown">
-                            <button class="emoji-button" title="Like">👍</button>
-                            <button class="emoji-button" title="Love">❤️</button>
-                            <button class="emoji-button" title="Laugh">😂</button>
-                            <button class="emoji-button" title="Wow">😮</button>
-                            <button class="emoji-button" title="Sad">😢</button>
-                            <button class="emoji-button" title="Angry">😡</button>
-                        </div>
+                <!-- Emoji Reaction Button -->
+                <div class="emoji-button">
+                    <button class="reaction-btn">React</button>
+                    <div class="emoji-dropdown">
+                        <button class="emoji-btn" title="Like">👍</button>
+                        <button class="emoji-btn" title="Love">❤️</button>
+                        <button class="emoji-btn" title="Laugh">😂</button>
+                        <button class="emoji-btn" title="Wow">😮</button>
+                        <button class="emoji-btn" title="Sad">😢</button>
+                        <button class="emoji-btn" title="Angry">😡</button>
                     </div>
                 </div>
             </div>
-            {% endwith %}
-            {% endfor %}
         </div>
+        {% endwith %}
+        {% endfor %}
     </div>
 
     <script>
@@ -83,17 +98,15 @@
                         'Content-Type': 'application/x-www-form-urlencoded',
                         'X-CSRFToken': '{{ csrf_token }}'
                     },
-                    body: new URLSearchParams({
-                        'emoji': emoji
-                    })
+                    body: new URLSearchParams({ 'emoji': emoji })
                 })
-                .then(response => response.json())  // Parse the JSON response
+                .then(response => response.json())
                 .then(data => {
                     let value = "";
                     Object.entries(data).forEach(([key, count]) => {
                         value += `${key}: ${count}, `;
                     });
-                    document.querySelector('.reaction-values').innerHTML = value.slice(0, -2);  // Update the reaction values
+                    this.closest('.post-tile').querySelector('.reaction-values').innerHTML = value.slice(0, -2);
                 });
             });
         });

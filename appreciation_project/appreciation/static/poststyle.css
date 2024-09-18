@@ -108,7 +108,7 @@ h1 {
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-top: 5px;
-    transition: opacity 3s ease, visibility 3s ease; /* Smooth transition */
+    transition: opacity 3s ease, visibility 3s ease; 
 }
 
     .emoji-dropdown button {
@@ -126,4 +126,11 @@ h1 {
 .reaction-container {
     text-align: center;
     margin-top: 10px;
+}
+
+.header-image {
+    width: 10%;  /* Ensures the width takes the full available space or its original width */
+    height: 10%; /* Maintains aspect ratio but reduces height proportionally */
+    max-height: 50px; /* Set a maximum height to reduce the overall height */
+    object-fit: cover; /* Ensures the image fills the space without distorting */
 }
