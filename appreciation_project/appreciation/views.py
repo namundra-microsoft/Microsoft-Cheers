@@ -5,6 +5,7 @@ from .forms import PostForm, EventForm
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 @login_required
 def create_post(request):
@@ -38,7 +39,8 @@ def add_reaction(request, post_id):
 
 def event_list(request):
     events = Event.objects.all()
-    return render(request, 'appreciation/event_list.html', {'events': events})
+    today = timezone.now().date()
+    return render(request, 'appreciation/event_list.html', {'events': events, 'today': today})
 
 def post_list(request, event_id):
     event = get_object_or_404(Event, id=event_id)

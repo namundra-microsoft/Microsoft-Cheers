@@ -112,6 +112,11 @@
             text-align: center;
             margin: 20px 0;
         }
+
+        .inactive-event {
+            color: #ff0000;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -143,9 +148,14 @@
             <div class="event-tile">
                 <h3>{{ event.name }}</h3>
                 <p>Date: {{ event.start_date }}</p>
-                <a href="{% url 'post_list' event.id %}">
-                    <button>View Posts</button>
-                </a>
+
+                {% if event.end_date < today %}
+                    <p class="inactive-event">No longer active</p>
+                {% else %}
+                    <a href="{% url 'post_list' event.id %}">
+                        <button>View Posts</button>
+                    </a>
+                {% endif %}
             </div>
         {% endfor %}
     </div>
