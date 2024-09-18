@@ -2,29 +2,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Posts for {{ event.name }}</title>
+    <title>Cheers for {{ event.name }}</title>
     <link rel="stylesheet" href="{% static 'poststyle.css' %}">
 </head>
 <body>
     <div class="container">
-        <h1>Posts for {{ event.name }}</h1>
+        <h1>Cheers for {{ event.name }}</h1>
 
         <div class="tab-navigation">
             <!-- Toggle between all posts and view my posts -->
-            <a href="{% url 'post_list' event.id %}">All Posts</a> |
-            <a href="{% url 'view_my_posts' event.id %}">View My Posts</a>
+            <a href="{% url 'post_list' event.id %}">All Cheers</a> |
+            <a href="{% url 'view_my_posts' event.id %}">View My Cheers</a>
         </div>
 
         {% if my_posts_view %}
-            <h2>Posts dedicated to you</h2>
+            <h2>Cheers dedicated to you</h2>
         {% else %}
-            <h2>All Posts</h2>
+            <h2>All Cheers</h2>
         {% endif %}
 
         <!-- Create Post Button (only show when the event is active) -->
         {% if is_active %}
         <div class="create-post">
-            <a href="{% url 'create_post' event.id %}">Create a new post</a>
+            <a href="{% url 'create_post' event.id %}">Cheer someone! </a>
         </div>
         {% endif %}
 
