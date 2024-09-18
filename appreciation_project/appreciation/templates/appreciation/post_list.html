@@ -1,3 +1,4 @@
+{% extends 'appreciation/base.html' %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -57,6 +58,45 @@
             </p>
             <h4 class="post-content">{{ post.content }}</h4>
 
+
+{% block title %} Cheers for {{ event.name }} {% endblock %}
+{% block style %} <link rel="stylesheet" href="{% static 'poststyle.css' %}"> {% endblock %}
+{% block content %}
+<div class="container">
+    <h1>Cheers for {{ event.name }}</h1>
+
+    <div class="tab-navigation">
+        <!-- Toggle between all posts and view my posts -->
+        <a href="{% url 'post_list' event.id %}">All Cheers</a> |
+        <a href="{% url 'view_my_posts' event.id %}">View My Cheers</a>
+    </div>
+
+    {% if my_posts_view %}
+        <h2>Cheers dedicated to you</h2>
+    {% else %}
+        <h2>All Cheers</h2>
+    {% endif %}
+
+    <!-- Create Post Button (only show when the event is active) -->
+    {% if is_active %}
+    <div class="create-post">
+        <a href="{% url 'create_post' event.id %}">Cheer someone! </a>
+    </div>
+    {% endif %}
+
+    <div class="post-grid">
+        {% for res in posts %}
+        {% with post=res.post reaction=res.reaction %}
+        <div class="post-tile" data-post-id="{{ post.id }}">
+            <p>
+                {% if post.is_anonymous %}
+                Anonymous
+                {% else %}
+                {{ post.author.username }}
+                {% endif %}
+            </p>
+            <h4>{{ post.content }}</h4>
+
             <!-- Reaction Section -->
             <div class="reactions-container">
                 <div class="selected-reaction">
@@ -64,6 +104,7 @@
                         {% for react_type, react_count in reaction.items %}
                         {% if react_count > 0 %}
                         {{ react_count }} {{ react_type }}&nbsp;
+                        {{ react_count }} {{ react_type }},
                         {% endif %}
                         {% endfor %}
                     </div>
@@ -86,6 +127,7 @@
         {% endwith %}
         {% endfor %}
     </div>
+</div>
 
     <script>
         document.querySelectorAll('.emoji-dropdown button').forEach(button => {
@@ -108,8 +150,9 @@
                     });
                     this.closest('.post-tile').querySelector('.reaction-values').innerHTML = value.slice(0, -2);
                 });
+                document.querySelector('.reaction-values').innerHTML = value.slice(0, -2);  // Update the reaction values
             });
         });
-    </script>
-</body>
-</html>
+    });
+</script>
+{% endblock %}

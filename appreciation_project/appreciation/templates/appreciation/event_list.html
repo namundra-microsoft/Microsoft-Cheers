@@ -205,6 +205,13 @@
     <!-- Banner Image -->
     <img src="{% static 'images/cheer.png' %}" alt="Cheers Banner" class="banner-image">
 
+
+{% extends 'appreciation/base.html' %}
+{% load static %}
+
+{% block title %} Microsoft Cheers - Event History {% endblock %}
+
+{% block content %}
     <!-- Main Heading -->
     <h1>Microsoft Cheers</h1>
 
@@ -242,6 +249,7 @@
             <button class="create-event-button">Create New Event</button>
         </a>
     </div>
+{% endblock %}
 
     <!-- Resources Section -->
     <div class="resources">

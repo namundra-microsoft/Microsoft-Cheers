@@ -1,36 +1,12 @@
 <!-- appreciation/templates/team_members.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Members</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+{% extends 'appreciation/base.html' %}
+{% load static %}
 
-        h1 {
-            color: #0078D4;
-            margin-top: 30px;
-            font-size: 3em;
-        }
+{% block title %} Team Members {% endblock %}
+{% block style %} <link rel="stylesheet" href="{% static 'teamlist.css' %}"> {% endblock %}
+{% block content %}
 
-        /* Styling for user list */
-        .user-container {
-            max-width: 800px;
-            width: 100%;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+<h1>Team Members</h1>
 
         .user-list {
             list-style-type: none;

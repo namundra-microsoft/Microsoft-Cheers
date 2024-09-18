@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Website{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    {% block style %} <link rel="stylesheet" href="{% static 'style.css' %}"> {% endblock %}
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div>
+            <a href="#">Home</a>
+            <a href="{% url 'event_list' %}">Events</a>
+            <a href="{% url 'team_members' %}">Team Members</a>
+            <a href="#">Reports</a>
+            <a href="#">Contact</a>
+        </div>
+        <div>
+            <a href="#">Profile</a>
+            <a href="#">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        {% block content %}
+        <!-- Content from child templates will be inserted here -->
+        {% endblock %}
+    </div>
+
+</body>
+</html>
