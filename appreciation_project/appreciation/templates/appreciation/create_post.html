@@ -1,5 +1,5 @@
 <!-- team_event_form.html -->
-{% load static %}
+<!-- {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,6 +15,28 @@
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+</html> -->
+
+
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Post for {{ event.name }}</title>
+    <link rel="stylesheet" href="{% static 'formstyle.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Create a Post for {{ event.name }}</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}  <!-- This will show the form fields without the event field -->
+
+            <button type="submit">Submit Post</button>
         </form>
     </div>
 </body>

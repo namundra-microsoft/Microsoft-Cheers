@@ -4,7 +4,7 @@ from .models import Post, Reaction, Event
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['event', 'to', 'content', 'is_anonymous']
+        fields = ['to', 'content', 'is_anonymous']
         # widgets = {
         #     'to': forms.Select(choices=[(user.id, user.username) for user in User.objects.all()]),
         # }

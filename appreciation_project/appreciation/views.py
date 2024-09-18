@@ -23,16 +23,31 @@ def create_post(request):
 
 @login_required
 def create_post(request, event_id):
+    event = get_object_or_404(Event, id=event_id)  # Get the event from the URL parameter
+
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
-            post.author = request.user
+            post.event = event  # Set the event for the post automatically
+            post.author = request.user  # Assuming the user is logged in and creating the post
             post.save()
-            return redirect('event_list')
+            return redirect('post_list', event_id=event.id)
     else:
         form = PostForm()
-    return render(request, 'appreciation/create_post.html', {'form': form})
+
+    return render(request, 'appreciation/create_post.html', {'form': form, 'event': event})
+# def create_post(request, event_id):
+#     if request.method == 'POST':
+#         form = PostForm(request.POST)
+#         if form.is_valid():
+#             post = form.save(commit=False)
+#             post.author = request.user
+#             post.save()
+#             return redirect('event_list')
+#     else:
+#         form = PostForm()
+#     return render(request, 'appreciation/create_post.html', {'form': form})
 
 
 @login_required
