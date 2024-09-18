@@ -9,6 +9,19 @@
     <div class="container">
         <h1>Posts for {{ event.name }}</h1>
 
+        <div class="tab-navigation">
+            <!-- Toggle between all posts and view my posts -->
+            <a href="{% url 'post_list' event.id %}">All Posts</a> |
+            <a href="{% url 'view_my_posts' event.id %}">View My Posts</a>
+        </div>
+
+        {% if my_posts_view %}
+            <h2>Posts dedicated to you</h2>
+        {% else %}
+            <h2>All Posts</h2>
+        {% endif %}
+
+        <!-- Create Post Button (only show when the event is active) -->
         {% if is_active %}
         <div class="create-post">
             <a href="{% url 'create_post' event.id %}">Create a new post</a>
@@ -30,24 +43,13 @@
 
                 <!-- Reaction Section -->
                 <div class="reactions-container">
-                    <!-- Selected Reaction Display -->
                     <div class="selected-reaction">
                         <div class="reaction-values">
                             {% for react_type, react_count in reaction.items %}
                             {% if react_count > 0 %}
                             {{ react_count }} {{ react_type }},
-                            {% else %}
-                            😊
                             {% endif %}
                             {% endfor %}
-                        </div>
-                        <!-- Hover tooltip for users who reacted -->
-                        <div class="reaction-users">
-                            <ul>
-                                {% for reaction in post.reactions.all %}
-                                <li>{{ reaction.user.username }} reacted with {{ reaction.emoji }}</li>
-                                {% endfor %}
-                            </ul>
                         </div>
                     </div>
 
@@ -87,35 +89,12 @@
                 })
                 .then(response => response.json())  // Parse the JSON response
                 .then(data => {
-
-                    // Process the data
                     let value = "";
                     Object.entries(data).forEach(([key, count]) => {
                         value += `${key}: ${count}, `;
                     });
-                    // Update the HTML content
-                    document.getElementById('reaction-values').innerHTML = value.slice(0, -2);  // Remove trailing comma
+                    document.querySelector('.reaction-values').innerHTML = value.slice(0, -2);  // Update the reaction values
                 });
-            });
-        });
-
-        document.querySelectorAll('.emoji-button').forEach(button => {
-            let timer;
-            const dropdown = button.querySelector('.emoji-dropdown');
-
-            button.addEventListener('mouseover', () => {
-                clearTimeout(timer);
-                dropdown.style.display = 'block';
-                dropdown.style.opacity = '1';
-                dropdown.style.visibility = 'visible';
-            });
-
-            button.addEventListener('mouseleave', () => {
-                timer = setTimeout(() => {
-                    dropdown.style.opacity = '0';
-                    dropdown.style.visibility = 'hidden';
-                    setTimeout(() => dropdown.style.display = 'none', 300); // Match transition duration
-                }, 200); // Delay before hiding
             });
         });
     </script>

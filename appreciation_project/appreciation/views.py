@@ -123,6 +123,35 @@ def post_list(request, event_id):
 
     return render(request, 'appreciation/post_list.html', {'event': event, 'posts': res_posts, 'is_active': is_active})
 
+def view_my_posts(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+    user = request.user
+    # Fetch posts where the 'to' field matches the logged-in user
+    my_posts = Post.objects.filter(event=event, to=user)
+    
+    # Prepare posts with reactions for display
+    reaction_emojis = {
+        "Like": "👍",
+        "Love": "❤️",
+        "Laugh": "😂",
+        "Wow": "😮",
+        "Sad": "😢",
+        "Angry": "😡"
+    }
+    
+    res_posts = []
+    reaction_types = ["Like", "Love", "Laugh", "Wow", "Sad", "Angry"]
+    for post in my_posts:
+        res_reaction = {}
+        for reaction_type in reaction_types:
+            reaction_count = Reaction.objects.filter(post=post, reaction_type=reaction_type).count()
+            if reaction_count > 0:
+                res_reaction[reaction_emojis[reaction_type]] = reaction_count
+        res_posts.append({'post': post, 'reaction': res_reaction})
+
+    return render(request, 'appreciation/post_list.html', {'event': event, 'posts': res_posts, 'my_posts_view': True})
+
+
 def create_event(request):
     if request.method == 'POST':
         form = EventForm(request.POST)
