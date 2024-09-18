@@ -7,7 +7,7 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
 from django.utils import timezone
 
-@login_required
+
 def create_post(request):
     if request.method == 'POST':
         form = PostForm(request.POST)
@@ -21,7 +21,7 @@ def create_post(request):
     return render(request, 'appreciation/create_post.html', {'form': form})
 
 
-@login_required
+
 def create_post(request, event_id):
     event = get_object_or_404(Event, id=event_id)  # Get the event from the URL parameter
 
@@ -50,7 +50,7 @@ def create_post(request, event_id):
 #     return render(request, 'appreciation/create_post.html', {'form': form})
 
 
-@login_required
+
 def add_reaction(request, post_id):
     if request.method == 'POST':
         print(post_id)
@@ -96,7 +96,7 @@ def event_list(request):
         
 #     return render(request, 'appreciation/post_list.html', {'event': event, 'posts': res_posts})
 
-@login_required
+
 def post_list(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     posts = event.posts.all()  # Fetch all posts for the event
@@ -123,7 +123,7 @@ def post_list(request, event_id):
 
     return render(request, 'appreciation/post_list.html', {'event': event, 'posts': res_posts, 'is_active': is_active, 'my_posts_view': False})
 
-@login_required
+
 def view_my_posts(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     user = request.user
@@ -165,7 +165,7 @@ def team_members(request):
     return render(request, 'appreciation/team_members.html', {'users': users})
 
 
-@login_required
+
 def event_participants(request, event_id):
     event = get_object_or_404(Event, id=event_id)
 

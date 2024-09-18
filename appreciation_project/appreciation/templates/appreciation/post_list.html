@@ -1,17 +1,11 @@
 {% extends 'appreciation/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cheers for {{ event.name }}</title>
-    <link rel="stylesheet" href="{% static 'poststyle.css' %}">
-    <!-- Add a Google Font for styling -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-</head>
-<body>
-    <!-- Navigation Bar -->
+
+
+{% block title %} Cheers for {{ event.name }} {% endblock %}
+{% block style %} <link rel="stylesheet" href="{% static 'poststyle.css' %}"> {% endblock %}
+{% block content %}
+<div class="container">
     <nav class="navbar">
         <ul class="navbar-links">
             <li><a href="{% url 'post_list' event.id %}">All Cheers</a></li>
@@ -20,12 +14,18 @@
         </ul>
     </nav>
 
-    <!-- Header Section -->
     <header class="header">
         <h1>Spread the Cheer for {{ event.name }}</h1>
         <p>Let’s celebrate every moment by showing gratitude!</p>
         <img src="{% static 'images/gratitude.png' %}" alt="Gratitude Banner" class="header-image" style="width: 100%; max-height: 350px; object-fit: cover;">
     </header>
+    <h1>Cheers for {{ event.name }}</h1>
+
+    <div class="tab-navigation">
+        <!-- Toggle between all posts and view my posts -->
+        <a href="{% url 'post_list' event.id %}">All Cheers</a> |
+        <a href="{% url 'view_my_posts' event.id %}">View My Cheers</a>
+    </div>
 
     <!-- Create Post Button -->
     {% if is_active %}
@@ -43,46 +43,6 @@
             <img src="{% static 'images/gratitude_handshake.png' %}" alt="Handshake Icon">
         </div> -->
     </section>
-
-    <!-- Post Grid -->
-    <div class="post-grid">
-        {% for res in posts %}
-        {% with post=res.post reaction=res.reaction %}
-        <div class="post-tile" data-post-id="{{ post.id }}">
-            <p class="post-author">
-                {% if post.is_anonymous %}
-                Anonymous
-                {% else %}
-                {{ post.author.username }}
-                {% endif %}
-            </p>
-            <h4 class="post-content">{{ post.content }}</h4>
-
-
-{% block title %} Cheers for {{ event.name }} {% endblock %}
-{% block style %} <link rel="stylesheet" href="{% static 'poststyle.css' %}"> {% endblock %}
-{% block content %}
-<div class="container">
-    <h1>Cheers for {{ event.name }}</h1>
-
-    <div class="tab-navigation">
-        <!-- Toggle between all posts and view my posts -->
-        <a href="{% url 'post_list' event.id %}">All Cheers</a> |
-        <a href="{% url 'view_my_posts' event.id %}">View My Cheers</a>
-    </div>
-
-    {% if my_posts_view %}
-        <h2>Cheers dedicated to you</h2>
-    {% else %}
-        <h2>All Cheers</h2>
-    {% endif %}
-
-    <!-- Create Post Button (only show when the event is active) -->
-    {% if is_active %}
-    <div class="create-post">
-        <a href="{% url 'create_post' event.id %}">Cheer someone! </a>
-    </div>
-    {% endif %}
 
     <div class="post-grid">
         {% for res in posts %}
@@ -153,6 +113,5 @@
                 document.querySelector('.reaction-values').innerHTML = value.slice(0, -2);  // Update the reaction values
             });
         });
-    });
 </script>
 {% endblock %}
