@@ -20,6 +20,21 @@ def create_post(request):
         form = PostForm()
     return render(request, 'appreciation/create_post.html', {'form': form})
 
+
+@login_required
+def create_post(request, event_id):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            return redirect('event_list')
+    else:
+        form = PostForm()
+    return render(request, 'appreciation/create_post.html', {'form': form})
+
+
 @login_required
 def add_reaction(request, post_id):
     if request.method == 'POST':
@@ -42,6 +57,30 @@ def event_list(request):
     today = timezone.now().date()
     return render(request, 'appreciation/event_list.html', {'events': events, 'today': today})
 
+# def post_list(request, event_id):
+#     event = get_object_or_404(Event, id=event_id)
+#     posts = event.posts.all()
+#     reaction_emojis = {
+#         "Like": "👍",
+#         "Love": "❤️",
+#         "Laugh": "😂",
+#         "Wow": "😮",
+#         "Sad": "😢",
+#         "Angry": "😡"
+#     }
+#     res_posts = []
+#     reaction_types = ["Like", "Love", "Laugh", "Wow", "Sad", "Angry"]
+#     for post in posts:
+#         res_reaction = {}
+#         for reaction_type in reaction_types:
+#             reaction_count = Reaction.objects.filter(post=post, reaction_type=reaction_type).count()
+#             if reaction_count > 0:
+#                 res_reaction[reaction_emojis[reaction_type]] = reaction_count
+#         print(res_reaction)
+#         res_posts.append({'post': post, 'reaction': res_reaction})
+        
+#     return render(request, 'appreciation/post_list.html', {'event': event, 'posts': res_posts})
+
 def post_list(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     posts = event.posts.all()
@@ -63,8 +102,11 @@ def post_list(request, event_id):
                 res_reaction[reaction_emojis[reaction_type]] = reaction_count
         print(res_reaction)
         res_posts.append({'post': post, 'reaction': res_reaction})
-        
-    return render(request, 'appreciation/post_list.html', {'event': event, 'posts': res_posts})
+
+    # Determine if the event is active
+    is_active = event.end_date >= timezone.now().date()
+
+    return render(request, 'appreciation/post_list.html', {'event': event, 'posts': res_posts, 'is_active': is_active})
 
 def create_event(request):
     if request.method == 'POST':

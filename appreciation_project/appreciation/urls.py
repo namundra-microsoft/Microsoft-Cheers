@@ -8,4 +8,5 @@ urlpatterns = [
     path('add_reaction/<int:post_id>/', views.add_reaction, name='add_reaction'),
     path('create_event/', views.create_event, name='create_event'),
     path('team/', views.team_members, name='team_members'),  # New path for team members
+    path('create_post/<int:event_id>/', views.create_post, name='create_post'),
 ]
