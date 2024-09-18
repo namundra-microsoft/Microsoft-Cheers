@@ -1,15 +1,10 @@
 <!-- team_event_form.html -->
+{% extends 'appreciation/base.html' %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Team Event</title>
-    <link rel="stylesheet" href="{% static 'formstyle.css' %}">
-</head>
-<body>
+{% block title %} My Team Event {% endblock %}
+{% block style %} <link rel="stylesheet" href="{% static 'formstyle.css' %}"> {% endblock %}
+{% block content %}
     <div class="form-container">
         <h1>My Team Event</h1>
         <form method="POST">
@@ -18,5 +13,5 @@
             <button type="submit">Submit</button>
         </form>
     </div>
-</body>
-</html>
+{% endblock %}
+
