@@ -10,6 +10,20 @@ h1 {
     color: #333;
 }
 
+body {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.container {
+    padding: 0 !important;
+}
+
+.navbar-header {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;

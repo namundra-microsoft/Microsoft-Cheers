@@ -1,36 +1,42 @@
+/* Overall page and layout styling */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: column;
     align-items: center;
 }
 
+/* Heading styling */
 h1 {
-    color: #0078D4;
+    color: #0078D4;  /* Blue color */
     margin-top: 30px;
     font-size: 3em;
+    text-align: center;
 }
 
-/* Styling for user list */
+/* Container for the team member list */
 .user-container {
     max-width: 800px;
     width: 100%;
     padding: 20px;
     background-color: white;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Subtle shadow for depth */
+    margin-bottom: 40px;
+    margin: 0 auto;
 }
 
+/* Styling for the user list */
 .user-list {
     list-style-type: none;
     padding: 0;
+    margin: 0;
 }
 
+/* Each list item (team member) styling */
 .user-list li {
-    background-color: #0078D4;
+    background-color: #0078D4;  /* Primary blue */
     color: white;
     margin: 10px 0;
     padding: 15px;
@@ -38,8 +44,10 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: background-color 0.3s ease;  /* Smooth hover effect */
 }
 
+/* Hover effect to change background on list items */
 .user-list li:hover {
-    background-color: #005A9E;
+    background-color: #005A9E;  /* Darker blue on hover */
 }

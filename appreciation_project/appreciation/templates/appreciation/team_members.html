@@ -1,12 +1,14 @@
-<!-- appreciation/templates/team_members.html -->
 {% extends 'appreciation/base.html' %}
 {% load static %}
 
 {% block title %} Team Members {% endblock %}
-{% block style %} <link rel="stylesheet" href="{% static 'teamlist.css' %}"> {% endblock %}
-{% block content %}
 
-<h1>Team Members</h1>
+{% block style %}
+    <link rel="stylesheet" href="{% static 'teamlist.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h1>Team Members</h1>
     <div class="user-container">
         <ul class="user-list">
             {% for user in users %}
@@ -14,5 +16,4 @@
             {% endfor %}
         </ul>
     </div>
-
 {% endblock %}
