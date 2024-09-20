@@ -4,27 +4,36 @@ body {
 	margin: 0;
 	padding: 0;
 }
-
-/* Navigation bar styling */
-nav {
-	background-color: #0078D4;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
+/* Navbar background color */
+.navbar {
+    background-color: #0078D4; /* Navbar background color */
 }
 
-nav a {
-	color: white;
-	text-decoration: none;
-	padding: 10px 20px;
-	font-size: 1.2em;
-	font-weight: bold;
+/* Default text color for navbar links */
+.navbar .nav-link {
+    color: white; /* Default color for navbar links */
 }
 
-nav a:hover {
-	background-color: #005A9E;
-	border-radius: 5px;
+/* Text color for navbar links on hover */
+.navbar .nav-link:hover {
+    color: white; /* Color when hovering */
 }
+
+/* Text color for active navbar link */
+.navbar .nav-link.active {
+    color: white; /* Color for active link */
+}
+
+/* Navbar brand text color */
+.navbar .navbar-brand {
+    color: white; /* Default color for brand text */
+}
+
+/* Brand text color on hover */
+.navbar .navbar-brand:hover {
+    color: white; /* Color when hovering */
+}
+
 
 /* Main Heading */
 h1 {

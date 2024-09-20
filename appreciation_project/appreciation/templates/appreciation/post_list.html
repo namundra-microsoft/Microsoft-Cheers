@@ -5,16 +5,95 @@
 
 {% block style %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Custom styles for the post section */
+        .post-card {
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin-bottom: 1.5rem;
+        }
+
+        .post-card-body {
+            padding: 1.5rem;
+        }
+
+        .post-avatar {
+            border: 3px solid #0078D4;
+        }
+
+        .reaction-btn {
+            margin-top: 0.5rem;
+        }
+
+        .emoji-btn {
+            margin: 0.2rem;
+        }
+
+        .reaction-values {
+            font-weight: bold;
+        }
+
+        .link-muted {
+            color: #0078D4;
+        }
+
+        .link-muted:hover {
+            color: #0056b3;
+        }
+    </style>
 {% endblock %}
 
 {% block script %}
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.reaction-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Find the emoji dropdown related to the clicked button
+                    const dropdown = this.nextElementSibling;
+
+                    // Toggle the display of the dropdown
+                    if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+                        dropdown.style.display = 'block';
+                    } else {
+                        dropdown.style.display = 'none';
+                    }
+                });
+            });
+
+            document.querySelectorAll('.emoji-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const emoji = this.getAttribute('title');
+                    const postId = this.closest('.post-card').getAttribute('data-post-id');
+                    fetch(`/appreciation/add_reaction/${postId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: new URLSearchParams({ 'emoji': emoji })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        let value = "";
+                        Object.entries(data).forEach(([key, count]) => {
+                            value += `${key}: ${count}, `;
+                        });
+                        this.closest('.post-card').querySelector('.reaction-values').innerHTML = value.slice(0, -2);
+
+                        // Hide the emoji dropdown after reacting
+                        this.closest('.emoji-dropdown').style.display = 'none';
+                    });
+                });
+            });
+        });
+    </script>
 {% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container mt-4 post-section">
     <!-- Navbar -->
 
     <!-- Header Section -->
@@ -45,43 +124,45 @@
     {% endif %}
 
     <!-- Post Grid -->
-    <div class="row">
+    <div class="row d-flex justify-content-center">
         {% for res in posts %}
         {% with post=res.post reaction=res.reaction %}
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        {% if post.is_anonymous %}
-                        Anonymous
-                        {% else %}
-                        {{ post.author.username }}
-                        {% endif %}
-                    </h5>
-                    <p class="card-text">{{ post.content }}</p>
-                    
-                    <!-- Reaction Section -->
-                    <div class="reactions-container">
-                        <div class="selected-reaction">
-                            <div class="reaction-values">
+        <div class="col-md-11 col-lg-9 col-xl-7 mb-4">
+            <div class="d-flex flex-start post-card" data-post-id="{{ post.id }}">
+                <img class="rounded-circle shadow-1-strong me-3 post-avatar" src="{% static 'images/avatar.jpg' %}" alt="avatar" width="65" height="65" />
+                <div class="card w-100 post-card-body">
+                    <div class="">
+                        <h5>
+                            {% if post.is_anonymous %}
+                            Anonymous
+                            {% else %}
+                            {{ post.author.username }}
+                            {% endif %}
+                        </h5>
+                        <p class="small">{{ post.created_at|timesince }} ago</p>
+                        <p>{{ post.content }}</p>
+
+                        <!-- Reaction Section -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center reaction-values">
                                 {% for react_type, react_count in reaction.items %}
                                 {% if react_count > 0 %}
                                 {{ react_count }} {{ react_type }}&nbsp;
                                 {% endif %}
                                 {% endfor %}
                             </div>
-                        </div>
-                        
-                        <!-- Emoji Reaction Button -->
-                        <div class="emoji-button mt-2">
-                            <button class="btn btn-sm btn-outline-secondary reaction-btn">React</button>
-                            <div class="emoji-dropdown mt-2">
-                                <button class="btn btn-outline-secondary emoji-btn" title="Like">👍</button>
-                                <button class="btn btn-outline-secondary emoji-btn" title="Love">❤️</button>
-                                <button class="btn btn-outline-secondary emoji-btn" title="Laugh">😂</button>
-                                <button class="btn btn-outline-secondary emoji-btn" title="Wow">😮</button>
-                                <button class="btn btn-outline-secondary emoji-btn" title="Sad">😢</button>
-                                <button class="btn btn-outline-secondary emoji-btn" title="Angry">😡</button>
+
+                            <!-- Emoji Reaction Button -->
+                            <div class="emoji-button">
+                                <button class="btn btn-sm btn-outline-secondary reaction-btn">React</button>
+                                <div class="emoji-dropdown mt-2" style="display: none;">
+                                    <button class="btn btn-outline-secondary emoji-btn" title="Like">👍</button>
+                                    <button class="btn btn-outline-secondary emoji-btn" title="Love">❤️</button>
+                                    <button class="btn btn-outline-secondary emoji-btn" title="Laugh">😂</button>
+                                    <button class="btn btn-outline-secondary emoji-btn" title="Wow">😮</button>
+                                    <button class="btn btn-outline-secondary emoji-btn" title="Sad">😢</button>
+                                    <button class="btn btn-outline-secondary emoji-btn" title="Angry">😡</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -92,29 +173,4 @@
         {% endfor %}
     </div>
 </div>
-
-<script>
-    document.querySelectorAll('.emoji-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const emoji = this.getAttribute('title');
-            const postId = this.closest('.post-tile').getAttribute('data-post-id');
-            fetch(`/appreciation/add_reaction/${postId}/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRFToken': '{{ csrf_token }}'
-                },
-                body: new URLSearchParams({ 'emoji': emoji })
-            })
-            .then(response => response.json())
-            .then(data => {
-                let value = "";
-                Object.entries(data).forEach(([key, count]) => {
-                    value += `${key}: ${count}, `;
-                });
-                this.closest('.post-tile').querySelector('.reaction-values').innerHTML = value.slice(0, -2);
-            });
-        });
-    });
-</script>
 {% endblock %}
